@@ -1,11 +1,23 @@
 import './App.css'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import Home from './pages/Home'
+import Register from './pages/Register'
+import Login from './pages/Login'
+import PageNotFound from './pages/PageNotFound'
 
 function App() {
 
   return (
-    <>
-      <h1 className='text-5xl font-bold underline text-center'>Welcome to Entrify</h1>
-    </>
+    <div>
+      <BrowserRouter>
+        <Routes>
+          <Route path='/' element = {<Home />} />
+          <Route path='/login' element = {<Login />} />
+          <Route path='/register' element = {<Register />} />
+          <Route path='/*' element = { <PageNotFound /> } />
+        </Routes>
+      </BrowserRouter>
+    </div>
   )
 }
 
