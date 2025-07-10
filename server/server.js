@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+app.use(express.json()); // json parsing middleware
 
 require("dotenv").config(); //For Loading ENV variables in Process.env
 
@@ -10,8 +11,8 @@ connectDB();
 //Importing routes
 const userRouter = require("./routes/userRoutes");
 
+
 // Routes/API calls
-app.use(express.json()); // json parsing middleware
 app.use("/api/users", userRouter); // all api calls for users will go to userRouter which will handle them
 
 const Port = 8081;

@@ -24,10 +24,7 @@ const register = async (req, res) => {
 const login = async (req, res) => {
 	try {
 		const user = await User.findOne({ email: req.body.email });
-		const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-			expiresIn: "7d",
-		});
-
+		
 		if (!user) {
 			return res.send({
 				success: false,
@@ -40,6 +37,9 @@ const login = async (req, res) => {
 				message: "Incorrect Email/Password, Please Retry",
 			});
 		}
+		const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+			expiresIn: "7d",
+		});
 		res.send({
 			success: true,
 			message: "Logged In Successfully",
@@ -50,4 +50,17 @@ const login = async (req, res) => {
 	}
 };
 
-module.exports = { register, login };
+const getCurrentUser = async (req, res) => {
+	try {
+		const user = await User.findById(req.userId).select("-password");//selects everything minus the passowrd
+		res.send({
+			success: true,
+			message: "User is Authenticated",
+			data: user,
+		});
+	} catch (error) {
+		res.status(500).send({ message: error.message });
+	}
+};
+
+module.exports = { register, login, getCurrentUser };

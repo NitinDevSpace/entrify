@@ -14,8 +14,8 @@ function Login() {
 	const onFinish = async (values) => {
 		try {
 			const response = await LoginUser(values);
-			document.cookie = `token:${response.token}; path=/; max-age=${7 * 24 * 60 * 60}`;
 			if (response.success) {
+				document.cookie = `token=${response.token}; path=/; max-age=${7 * 24 * 60 * 60}`;
 				messageApi.open({
 					type: "success",
 					content: response.message,
