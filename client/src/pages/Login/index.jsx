@@ -1,13 +1,41 @@
 import React from "react";
-import { Button, Form, Input } from "antd";
+import { Button, Form, Input, message } from "antd";
 import { Link } from "react-router-dom";
 import bgImage from "../../assets/login_bg.jpeg";
 import tlogo from "../../assets/entrify_t.png";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { LoginUser } from "../../services/users";
 
 function Login() {
 	const navigate = useNavigate();
+	const [messageApi, contextHolder] = message.useMessage();
+
+	const onFinish = async (values) => {
+		try {
+			const response = await LoginUser(values);
+			document.cookie = `token:${response.token}; path=/; max-age=${7 * 24 * 60 * 60}`;
+			if (response.success) {
+				messageApi.open({
+					type: "success",
+					content: response.message,
+				});
+				navigate('/');
+			} else {
+				messageApi.open({
+					type: "error",
+					content: response.message,
+				});
+			}
+			
+		} catch (error) {
+			messageApi.open({
+				type: "error",
+				content: error.message,
+			})
+		}
+	}
+
 	return (
 		<motion.div
 			initial={{ opacity: 0 }}
@@ -19,6 +47,7 @@ function Login() {
 				className="relative p-0 flex items-center justify-center md:h-screen bg-cover bg-center"
 				style={{ backgroundImage: `url(${bgImage})` }}
 			>
+				{contextHolder}
 				{/* Login Conatiner */}
 				<div className="bg-white rounded-lg m-5  md:h-3/4 w-2/3 flex flex-col md:flex-row justify-center overflow-hidden relative font-mon ">
 					<img
@@ -32,7 +61,7 @@ function Login() {
 						<h1 className="text-2xl font-bold text-center mb-4 text-[#7B61FF]">
 							Login to Entrify
 						</h1>
-						<Form layout="vertical">
+						<Form layout="vertical" onFinish={onFinish}>
 							<Form.Item
 								label="Email"
 								htmlFor="email"
@@ -61,10 +90,12 @@ function Login() {
 								</button>
 							</Form.Item>
 							<Form.Item>
-                <Button
-                  type="primary"
+								<Button
+									type="primary"
 									className="bg-[#7B61FF] text-white "
 									size="large"
+									style={{ fontSize: "1.2rem", fontWeight: "600" }}
+									htmlType="submit"
 								>
 									Login
 								</Button>
