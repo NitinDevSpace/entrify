@@ -11,21 +11,19 @@ import {
 } from "antd";
 import { ShowLoading, HideLoading } from "../../redux/loaderSlice";
 import { useDispatch } from "react-redux";
-// import { addTheatre, updateTheatre } from '../../apicalls/theatres';
 import {
 	ArrowLeftOutlined,
 	EditOutlined,
 	DeleteOutlined,
 } from "@ant-design/icons";
 import { useEffect, useState } from "react";
-// import { useSelector } from 'react-redux';
 import { getAllMovies } from "../../services/movies";
-// import {
-// 	addShow,
-// 	deleteShow,
-// 	getShowsByTheatre,
-// 	updateShow,
-// } from "../../services/";
+import {
+	addShow,
+	deleteShow,
+	getShowsByTheatre,
+	updateShow,
+} from "../../services/shows";
 import moment from "moment";
 
 const ShowModal = ({

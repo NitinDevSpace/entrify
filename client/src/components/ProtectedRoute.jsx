@@ -32,36 +32,25 @@ const ProtectedRoute = ({ children }) => {
 			children: [
 				{
 					key: "profile",
-					label: (
-						<span
-							onClick={() => {
-								if (user.role == "admin") {
-									navigate("/admin");
-								} else if (user.role == "partner") {
-									navigate("/partner");
-								} else {
-									navigate("/profile");
-								}
-							}}
-						>
-							My Profile
-						</span>
-					),
+					onClick: () => {
+						if (user.role == "admin") {
+							navigate("/admin");
+						} else if (user.role == "partner") {
+							navigate("/partner");
+						} else {
+							navigate("/profile");
+						}
+					},
+					label: <span>My Profile</span>,
 					icon: <ProfileOutlined />,
 				},
 				{
 					key: "logout",
-					label: (
-						<Link
-							to="/login"
-							onClick={() => {
-								document.cookie = "token=; max-age=0; path=/";
-							}}
-						>
-							Log Out
-						</Link>
-					),
+					label: <Link to="/login">Log Out</Link>,
 					icon: <LogoutOutlined />,
+					onClick: () => {
+						document.cookie = "token=; max-age=0; path=/";
+					},
 				},
 			],
 		},
@@ -110,7 +99,14 @@ const ProtectedRoute = ({ children }) => {
 							background: "#7B61FF",
 						}}
 					>
-						<img src={logo} alt="logo" className="h-32" />
+						<img
+							src={logo}
+							alt="logo"
+							className="h-32 cursor-pointer"
+							onClick={() => {
+								navigate("/");
+							}}
+						/>
 						<Menu
 							theme="dark"
 							mode="horizontal"
