@@ -6,8 +6,8 @@ const {
 	getCurrentUser,
 } = require("../controllers/userController");
 const authMiddleware = require("../middleware/authMiddleware")
-
 const userRouter = express.Router(); // creates a router object ot handle routes for users (API Calls)
+
 
 //register a new user
 userRouter.post("/register", register);

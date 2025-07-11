@@ -20,6 +20,9 @@ function Register() {
 					type: "success",
 					content: response.message,
 				});
+				setTimeout(() => {
+					navigate('/login');
+				},700)
 			} else {
 				messageApi.open({
 					type: "error",

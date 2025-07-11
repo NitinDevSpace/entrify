@@ -8,6 +8,7 @@ import { AnimatePresence } from "framer-motion";
 import ProtectedRoute from "./components/ProtectedRoute";
 import store from "./redux/store";
 import { Provider } from 'react-redux';
+import Admin from "./pages/Admin";
 
 function App() {
 	return (
@@ -21,6 +22,14 @@ function App() {
 								element={
 									<ProtectedRoute>
 										<Home />
+									</ProtectedRoute>
+								}
+							/>
+							<Route
+								path="/admin"
+								element={
+									<ProtectedRoute>
+										<Admin />
 									</ProtectedRoute>
 								}
 							/>

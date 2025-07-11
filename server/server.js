@@ -10,10 +10,12 @@ connectDB();
 
 //Importing routes
 const userRouter = require("./routes/userRoutes");
+const movieRouter = require("./routes/movieRoutes");
 
 
 // Routes/API calls
 app.use("/api/users", userRouter); // all api calls for users will go to userRouter which will handle them
+app.use("/api/movies", movieRouter); // all api calls for movies will go to movieRouter which will handle them
 
 const Port = 8081;
 app.listen(Port, () => {

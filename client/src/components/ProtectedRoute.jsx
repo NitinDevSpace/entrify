@@ -11,6 +11,7 @@ import { GetCurrentUser } from "../services/users";
 import { SetUser } from "../redux/userSlice";
 import { message, Layout, Menu } from "antd";
 import { ShowLoading, HideLoading } from "../redux/loaderSlice";
+import logo from "../assets/logo-white.png";
 
 const ProtectedRoute = ({ children }) => {
 	const { user } = useSelector((state) => state.users); // selects the state of the user in userSlice
@@ -18,18 +19,18 @@ const ProtectedRoute = ({ children }) => {
 	const navigate = useNavigate();
 	const navItems = [
 		{
-			key:'home',
+			key: "home",
 			label: "Home",
 			icon: <HomeOutlined />,
 		},
 		{
-			key:'user',
+			key: "user",
 			label: `${user ? user.name : ""}`,
 			icon: <UserOutlined />,
 			//drop down submenu content in children
 			children: [
 				{
-					key:'profile',
+					key: "profile",
 					label: (
 						<span
 							onClick={() => {
@@ -48,7 +49,7 @@ const ProtectedRoute = ({ children }) => {
 					icon: <ProfileOutlined />,
 				},
 				{
-					key:'logout',
+					key: "logout",
 					label: (
 						<Link
 							to="/login"
@@ -71,7 +72,7 @@ const ProtectedRoute = ({ children }) => {
 		try {
 			dispatch(ShowLoading()); //loading to true
 			const respose = await GetCurrentUser();
-			console.log(respose);
+			//console.log(respose);
 			dispatch(SetUser(respose.data));
 			dispatch(HideLoading()); // loading state to false
 		} catch (error) {
@@ -105,12 +106,16 @@ const ProtectedRoute = ({ children }) => {
 							width: "100%",
 							display: "flex",
 							alignItems: "center",
+							background: "#7B61FF",
 						}}
 					>
-						<h3 className="demo-logo text-2xl text-white m-0" style={{ color: "white" }}>
-							Entrify
-						</h3>
-						<Menu theme="dark" mode="horizontal" items={navItems} />
+						<img src={logo} alt="logo" className="h-32" />
+						<Menu
+							theme="dark"
+							mode="horizontal"
+							items={navItems}
+							style={{ background: "#7B61FF" }}
+						/>
 					</Header>
 					<div style={{ padding: 24, minHeight: 380, background: "#fff" }}>
 						{children}
