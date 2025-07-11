@@ -22,6 +22,7 @@ const ProtectedRoute = ({ children }) => {
 			key: "home",
 			label: "Home",
 			icon: <HomeOutlined />,
+			onClick: () => navigate("/"),
 		},
 		{
 			key: "user",

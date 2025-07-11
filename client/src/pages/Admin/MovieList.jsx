@@ -107,6 +107,7 @@ function MovieList() {
 		<div className="d-flex justify-end">
 			{contextHolder}
 			<Button
+				type="primary"
 				onClick={() => {
 					setIsModalOpen(true);
 					setFormType("add");

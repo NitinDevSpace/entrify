@@ -2,7 +2,7 @@ import React from "react";
 import bgImage from "../../assets/login_bg.jpeg";
 import tlogo from "../../assets/logo-white.png";
 import { useNavigate } from "react-router-dom";
-import { Button, Form, Input, message } from "antd";
+import { Button, Form, Input, message, Radio } from "antd";
 import { motion } from "framer-motion";
 import { RegisterUser } from "../../services/users";
 
@@ -21,8 +21,8 @@ function Register() {
 					content: response.message,
 				});
 				setTimeout(() => {
-					navigate('/login');
-				},700)
+					navigate("/login");
+				}, 700);
 			} else {
 				messageApi.open({
 					type: "error",
@@ -36,7 +36,6 @@ function Register() {
 			});
 		}
 	};
-
 
 	return (
 		<motion.div
@@ -141,9 +140,27 @@ function Register() {
 									placeholder="Enter your password again"
 								/>
 							</Form.Item>
+							<Form.Item className="mb-0">
+								<div className="flex items-center gap-5">
+									<span className="font-medium">Register as a Partner:</span>
+									<Form.Item
+										name="role"
+										noStyle
+										initialValue="user"
+										rules={[
+											{ required: true, message: "Please select an option" },
+										]}
+									>
+										<Radio.Group>
+											<Radio value="partner">Yes</Radio>
+											<Radio value="user">No</Radio>
+										</Radio.Group>
+									</Form.Item>
+								</div>
+							</Form.Item>
 							<Button
 								type="primary"
-								className="bg-[#7B61FF] text-white"
+								className="bg-[#7B61FF] mt-12 text-white"
 								size="large"
 								style={{ fontSize: "1.2rem", fontWeight: "600" }}
 								htmlType="submit"
