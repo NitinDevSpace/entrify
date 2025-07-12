@@ -5,42 +5,31 @@ const Show = require("../models/showModel");
 
 const makePayment = async (req, res) => {
 	try {
-		const { token, amount } = req.body;
+		const { amount, userEmail } = req.body;
 
-		// whether the customer is already present on stripe
-		const customers = await stripe.customers.list({
-			email: token.email,
-			limit: 1,
-		});
-
-		let currCustomer = null;
-		if (customers.data.length > 0) {
-			currCustomer = customers.data[0];
-		} else {
-			const createNewCustomer = async () => {
-				return await stripe.customers.create({
-					source: token.id,
-					email: token.email,
-				});
-			};
-			currCustomer = await createNewCustomer();
-		}
-
-		const paymentIntent = await stripe.paymentIntents.create({
-			amount: amount,
-			currency: "usd",
-			customer: currCustomer.id,
+		const session = await stripe.checkout.sessions.create({
 			payment_method_types: ["card"],
-			receipt_email: token.email,
-			description: "Token has been assigned to the movie",
+			line_items: [
+				{
+					price_data: {
+						currency: "inr",
+						product_data: {
+							name: "Movie Ticket Booking",
+						},
+						unit_amount: amount * 100, // INR paise
+					},
+					quantity: 1,
+				},
+			],
+			mode: "payment",
+			customer_email: userEmail,
+			success_url: "http://localhost:5173/profile",
+			cancel_url: "http://localhost:5173/book-show/:id",
 		});
-
-		const transactionId = paymentIntent.id;
 
 		res.send({
 			success: true,
-			message: "Payment Successfull, !Tickets Booked",
-			data: transactionId,
+			sessionId: session.id,
 		});
 	} catch (error) {
 		res.send({
@@ -49,6 +38,7 @@ const makePayment = async (req, res) => {
 		});
 	}
 };
+
 
 const bookShow = async (req, res) => {
 	try {

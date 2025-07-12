@@ -6,8 +6,9 @@ import { getShowById } from "../../services/shows";
 import { useNavigate, useParams } from "react-router-dom";
 import { message, Card, Row, Col, Button } from "antd";
 import moment from "moment";
-import StripeCheckout from "react-stripe-checkout";
+import { loadStripe } from "@stripe/stripe-js";
 import { bookShow, makePayment } from "../../services/booking";
+import GetSeats from "./GetSeats";
 
 const BookShow = () => {
 	const { user } = useSelector((state) => {
@@ -18,6 +19,9 @@ const BookShow = () => {
 	const [show, setShow] = useState();
 	const [selectedSeats, setSelectedSeats] = useState([]);
 	const navigate = useNavigate();
+	const stripePromise = loadStripe(
+		"pk_test_51Rk2tPQWrCb3u4IL5VDgy6DSbsjKbBf3lKJ0LSqxi7wSgIF5KEqWOK8kXnofRiIyWI66HPd1pvo1QbxhKHAPEwiP00kS6dkbTG"
+	);
 
 	const book = async (transactionId) => {
 		try {
@@ -41,17 +45,19 @@ const BookShow = () => {
 		}
 	};
 
-	const onToken = async (token) => {
+	const handleCheckout = async () => {
 		try {
 			dispatch(ShowLoading());
-			const response = await makePayment(
-				token,
-				selectedSeats.length * show.ticketPrice
+			const response = await createCheckoutSession(
+				selectedSeats.length * show.ticketPrice,
+				user.email
 			);
+
 			if (response.success) {
-				message.success(response.message);
-				book(response.data);
-				console.log(response);
+				const stripe = await stripePromise;
+				await stripe.redirectToCheckout({
+					sessionId: response.sessionId,
+				});
 			} else {
 				message.error(response.message);
 			}
@@ -60,64 +66,6 @@ const BookShow = () => {
 			message.error(err.message);
 			dispatch(HideLoading());
 		}
-	};
-
-	const getSeats = () => {
-		let columns = 12;
-		let totalSeats = show.totalSeats;
-		let rows = Math.ceil(totalSeats / columns);
-
-		return (
-			<div
-				style={{
-					display: "flex",
-					flexDirection: "column",
-					alignItems: "center",
-				}}
-			>
-				<div className="w-100 max-width-600 mx-auto mb-25px">
-					<p className="text-center mb-10px">
-						Screen this side, you will be watching in this direction
-					</p>
-					<div className="screen-div"></div>
-					<ul className="seat-ul justify-content-center">
-						{Array.from(Array(rows).keys()).map((row) => {
-							return Array.from(Array(columns).keys()).map((column) => {
-								let seatNumber = row * columns + column + 1;
-								let seatClass = "seat-btn";
-								if (selectedSeats.includes(seatNumber)) {
-									seatClass += " selected";
-								}
-								if (show.bookedSeats.includes(seatNumber)) {
-									seatClass += " booked";
-								}
-								if (seatNumber <= totalSeats)
-									return (
-										<li>
-											<button
-												onClick={() => {
-													if (selectedSeats.includes(seatNumber)) {
-														setSelectedSeats(
-															selectedSeats.filter(
-																(curSeatNumber) => curSeatNumber !== seatNumber
-															)
-														);
-													} else {
-														setSelectedSeats([...selectedSeats, seatNumber]);
-													}
-												}}
-												className={seatClass}
-											>
-												{seatNumber}
-											</button>
-										</li>
-									);
-							});
-						})}
-					</ul>
-				</div>
-			</div>
-		);
 	};
 
 	const getData = async () => {
@@ -176,21 +124,23 @@ const BookShow = () => {
 							}
 							style={{ width: "100%" }}
 						>
-							{getSeats()}
-
+							<GetSeats
+								selectedSeats={selectedSeats}
+								setSelectedSeats={setSelectedSeats}
+								show={show}
+							/>
 							{selectedSeats.length > 0 && (
-								<StripeCheckout
-									token={onToken}
-									amount={selectedSeats.length * show.ticketPrice}
-									billingAddress
-									stripeKey="pk_test_51Rk2tPQWrCb3u4IL5VDgy6DSbsjKbBf3lKJ0LSqxi7wSgIF5KEqWOK8kXnofRiIyWI66HPd1pvo1QbxhKHAPEwiP00kS6dkbTG"
-								>
-									<div className="max-width-600 mx-auto">
-										<Button type="primary" shape="round" size="large" block>
-											Pay Now
-										</Button>
-									</div>
-								</StripeCheckout>
+								<div className="max-width-600 mx-auto">
+									<Button
+										type="primary"
+										shape="round"
+										size="large"
+										block
+										onClick={handleCheckout}
+									>
+										Pay Now
+									</Button>
+								</div>
 							)}
 						</Card>
 					</Col>
