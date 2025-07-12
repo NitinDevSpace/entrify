@@ -16,15 +16,20 @@ const makePayment = async (req, res) => {
 						product_data: {
 							name: "Movie Ticket Booking",
 						},
-						unit_amount: amount * 100, // INR paise
+						unit_amount: parseInt(amount * 100), // INR paise
 					},
 					quantity: 1,
 				},
 			],
 			mode: "payment",
 			customer_email: userEmail,
-			success_url: "http://localhost:5173/profile",
-			cancel_url: "http://localhost:5173/book-show/:id",
+			metadata: {
+				showId: req.body.showId,
+				userId: req.body.userId,
+				seats: JSON.stringify(req.body.seats),
+			},
+			success_url: `${process.env.CLIENT_URL}/profile`,
+			cancel_url: `${process.env.CLIENT_URL}/book-show`,
 		});
 
 		res.send({
@@ -38,7 +43,6 @@ const makePayment = async (req, res) => {
 		});
 	}
 };
-
 
 const bookShow = async (req, res) => {
 	try {

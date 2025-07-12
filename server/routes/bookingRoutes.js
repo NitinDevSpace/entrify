@@ -6,7 +6,7 @@ const {
 } = require("../controllers/bookingController");
 
 
-bookingRouter.post("/makePayment", makePayment);
+bookingRouter.post("/make-payment", makePayment);
 bookingRouter.post("/bookShow", bookShow);
 bookingRouter.get("/getAllBookings", getAllBookings);
 

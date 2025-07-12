@@ -6,8 +6,8 @@ import { getShowById } from "../../services/shows";
 import { useNavigate, useParams } from "react-router-dom";
 import { message, Card, Row, Col, Button } from "antd";
 import moment from "moment";
-import { loadStripe } from "@stripe/stripe-js";
-import { bookShow, makePayment } from "../../services/booking";
+import { loadStripe } from "@stripe/stripe-js/pure";
+import { createCheckoutSession } from "../../services/booking";
 import GetSeats from "./GetSeats";
 
 const BookShow = () => {
@@ -23,40 +23,25 @@ const BookShow = () => {
 		"pk_test_51Rk2tPQWrCb3u4IL5VDgy6DSbsjKbBf3lKJ0LSqxi7wSgIF5KEqWOK8kXnofRiIyWI66HPd1pvo1QbxhKHAPEwiP00kS6dkbTG"
 	);
 
-	const book = async (transactionId) => {
-		try {
-			dispatch(ShowLoading());
-			const response = await bookShow({
-				show: params.id,
-				transactionId,
-				seats: selectedSeats,
-				user: user._id,
-			});
-			if (response.success) {
-				message.success("Show Booking done!");
-				navigate("/profile");
-			} else {
-				message.error(response.message);
-			}
-			dispatch(HideLoading());
-		} catch (err) {
-			message.error(err.message);
-			dispatch(HideLoading());
-		}
-	};
-
 	const handleCheckout = async () => {
 		try {
 			dispatch(ShowLoading());
-			const response = await createCheckoutSession(
-				selectedSeats.length * show.ticketPrice,
-				user.email
-			);
+			const payload = {
+				amount: selectedSeats.length * show.ticketPrice,
+				userEmail: user.email,
+				showId: show._id,
+				userId: user._id,
+				seats: selectedSeats,
+			};
+			console.log("Payload being sent to backend:", payload);
+			const response = await createCheckoutSession(payload);
 
-			if (response.success) {
+			if (response.data.success) {
 				const stripe = await stripePromise;
+				console.log("Stripe object:", stripe);
+				console.log("Session ID:", response.sessionId);
 				await stripe.redirectToCheckout({
-					sessionId: response.sessionId,
+					sessionId: response.data.sessionId,
 				});
 			} else {
 				message.error(response.message);
