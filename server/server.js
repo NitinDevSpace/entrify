@@ -13,13 +13,16 @@ const userRouter = require("./routes/userRoutes");
 const movieRouter = require("./routes/movieRoutes");
 const theaterRouter = require("./routes/theaterRoutes");
 const showRouter = require('./routes/showRoutes');
+const bookingRouter = require("./routes/bookingRoutes");
+const auth = require('./middleware/authMiddleware');
 
 
 // Routes/API calls
 app.use("/api/users", userRouter); // all api calls for users will go to userRouter which will handle them
-app.use("/api/movies", movieRouter); // all api calls for movies will go to movieRouter which will handle them
-app.use("/api/theaters", theaterRouter); 
-app.use('/api/shows', showRouter);
+app.use("/api/movies", auth, movieRouter); // all api calls for movies will go to movieRouter which will handle them
+app.use("/api/theaters", auth, theaterRouter); 
+app.use("/api/shows", auth, showRouter);
+app.use("/api/bookings", auth, bookingRouter);
 
 const Port = 8081;
 app.listen(Port, () => {

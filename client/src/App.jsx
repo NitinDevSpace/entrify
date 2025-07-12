@@ -7,10 +7,12 @@ import PageNotFound from "./pages/PageNotFound";
 import { AnimatePresence } from "framer-motion";
 import ProtectedRoute from "./components/ProtectedRoute";
 import store from "./redux/store";
-import { Provider } from 'react-redux';
+import { Provider } from "react-redux";
 import Admin from "./pages/Admin";
-import Partner from './pages/Partner';
-import Profile from './pages/User';
+import Partner from "./pages/Partner";
+import Profile from "./pages/User";
+import SingleMovie from "./pages/Booking/SingleMovie";
+import BookShow from "./pages/Booking/BookShow";
 
 function App() {
 	return (
@@ -48,6 +50,22 @@ function App() {
 								element={
 									<ProtectedRoute>
 										<Partner />
+									</ProtectedRoute>
+								}
+							/>
+							<Route
+								path="/movie/:id"
+								element={
+									<ProtectedRoute>
+										<SingleMovie />
+									</ProtectedRoute>
+								}
+							/>
+							<Route
+								path="/book-show/:id"
+								element={
+									<ProtectedRoute>
+										<BookShow />
 									</ProtectedRoute>
 								}
 							/>

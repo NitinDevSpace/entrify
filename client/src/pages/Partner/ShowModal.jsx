@@ -170,8 +170,9 @@ const ShowModal = ({
 								setSelectedShow({
 									...data,
 									date: moment(data.date).format("YYYY-MM-DD"),
+									movie: data.movie._id,
 								});
-								console.log(selectedMovie && selectedMovie.title);
+								//console.log(selectedMovie && selectedMovie.title);
 							}}
 						>
 							<EditOutlined />
@@ -221,7 +222,9 @@ const ShowModal = ({
 					</Button>
 				)}
 			</div>
-			{view === "table" && <Table dataSource={shows} columns={columns} />}
+			{view === "table" && (
+				<Table dataSource={shows} columns={columns} rowKey="_id" />
+			)}
 
 			{(view === "form" || view === "edit") && (
 				<Form
@@ -321,7 +324,6 @@ const ShowModal = ({
 										<Select
 											id="movie"
 											placeholder="Select Movie"
-											defaultValue={selectedMovie && selectedMovie.title}
 											style={{ width: "100%", height: "45px" }}
 											options={movies.map((movie) => ({
 												key: movie._id,

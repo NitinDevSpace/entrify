@@ -88,7 +88,7 @@ const ProtectedRoute = ({ children }) => {
 			<>
 				<Layout>
 					<Header
-						className="d-flex justify-content-between"
+						className="d-flex overflow-hidden justify-content-between"
 						style={{
 							position: "sticky",
 							top: 0,
@@ -99,14 +99,16 @@ const ProtectedRoute = ({ children }) => {
 							background: "#7B61FF",
 						}}
 					>
-						<img
-							src={logo}
-							alt="logo"
-							className="h-32 cursor-pointer"
-							onClick={() => {
-								navigate("/");
-							}}
-						/>
+						<div className="h-36 flex items-center cursor-pointer">
+							<img
+								src={logo}
+								alt="logo"
+								className="h-36 object-contain "
+								onClick={() => {
+									navigate("/");
+								}}
+							/>
+						</div>
 						<Menu
 							theme="dark"
 							mode="horizontal"
