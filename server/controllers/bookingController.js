@@ -98,7 +98,7 @@ const bookShow = async (req, res) => {
 
 const getAllBookings = async (req, res) => {
 	try {
-		const bookings = await Booking.find({ user: req.body.userId })
+		const bookings = await Booking.find({ user: req.userId })
 			.populate("user")
 			.populate("show")
 			.populate({
@@ -112,7 +112,7 @@ const getAllBookings = async (req, res) => {
 				path: "show",
 				populate: {
 					path: "theatre",
-					model: "theatres",
+					model: "theaters",
 				},
 			});
 

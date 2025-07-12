@@ -38,8 +38,6 @@ const BookShow = () => {
 
 			if (response.data.success) {
 				const stripe = await stripePromise;
-				console.log("Stripe object:", stripe);
-				console.log("Session ID:", response.sessionId);
 				await stripe.redirectToCheckout({
 					sessionId: response.data.sessionId,
 				});
