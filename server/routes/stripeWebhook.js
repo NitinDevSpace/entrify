@@ -7,7 +7,6 @@ const EmailHelper = require("../utils/EmailHelper");
 
 router.post(
 	"/webhook",
-	express.raw({ type: "application/json" }), // IMPORTANT: raw body for Stripe signature
 	async (req, res) => {
 		const sig = req.headers["stripe-signature"];
 		let event;

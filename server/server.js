@@ -67,7 +67,7 @@ app.use(
 			connectSrc: ["'self'", "api.example.com"], // Allow connections to 'self' and api.example.com
 			fontSrc: ["'self'", "fonts.gstatic.com"], // Allow fonts from 'self' and fonts.gstatic.com
 			objectSrc: ["'none'"], // Disallow object, embed, and applet elements
-			upgradeInsecureRequests: [], // Upgrade insecure requests to HTTPS
+			upgradeInsecureRequests: null, // Upgrade insecure requests to HTTPS
 		},
 	})
 );
