@@ -1,5 +1,4 @@
 const theaterRouter = require('express').Router();
-const Theater = require('../models/theaterModel');
 const {
     addTheater,
     deleteTheater,
