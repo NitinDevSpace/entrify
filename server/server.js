@@ -97,7 +97,7 @@ app.use("/api/theaters", auth, theaterRouter);
 app.use("/api/shows", auth, showRouter);
 app.use("/api/bookings", auth, bookingRouter);
 
-const Port = 8081;
+const port = process.env.PORT || 8080;
 app.listen(Port, () => {
-	console.log(`Listening on port ${Port}`);
+	console.log(`Listening on port ${port}`);
 });
