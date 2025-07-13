@@ -1,6 +1,7 @@
 const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
-const EmailHelper = require('../utils/EmailHelper')
+const EmailHelper = require("../utils/EmailHelper");
+const bcrypt = require("bcryptjs");
 
 const register = async (req, res) => {
 	try {
@@ -11,7 +12,12 @@ const register = async (req, res) => {
 				message: "User already exists",
 			});
 		}
-		const newUser = new User(req.body); // passing the data to user for creating a new user
+		const saltRounds = 10;
+		const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
+		const newUser = new User({
+			...req.body,
+			password: hashedPassword,
+		}); // passing the data to user for creating a new user
 		await newUser.save(); // then we need to save the new user to the database
 		res.send({
 			success: true,
@@ -32,10 +38,13 @@ const login = async (req, res) => {
 				message: "User not found, Please Register",
 			});
 		}
-		if (req.body.password !== user.password) {
+		const saltRounds = 10;
+		const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
+		const isMatch = await bcrypt.compare(req.body.password, hashedPassword);
+		if (!isMatch) {
 			return res.send({
 				success: false,
-				message: "Incorrect Email/Password, Please Retry",
+				message: "Invalid Password",
 			});
 		}
 		const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
