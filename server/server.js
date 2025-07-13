@@ -4,6 +4,8 @@ const app = express();
 const helmet = require("helmet");
 const mongoSanitize = require("express-mongo-sanitize");
 const path = require("path");
+const cors = require("cors");
+
 
 require("dotenv").config(); // LOADS ENV VARIABLES INTO PROCESS.ENV
 
@@ -40,6 +42,12 @@ const apiLimited = rateLimit({
 const clientBuildPath = path.join(__dirname, "../client/dist");
 app.use(express.static(clientBuildPath));
 
+app.use(
+	cors({
+		origin: process.env.FRONTEND_URL,
+		credentials: true,
+	})
+);
 app.use(helmet());
 app.use(express.json());
 // app.use(
