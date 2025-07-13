@@ -37,7 +37,7 @@ const apiLimited = rateLimit({
 	},
 });
 
-const clientBuildPath = path.join(__dirname, "../client/build");
+const clientBuildPath = path.join(__dirname, "../client/dist");
 app.use(express.static(clientBuildPath));
 
 app.use(helmet());
