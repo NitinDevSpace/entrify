@@ -88,9 +88,6 @@ app.use("/api/movies", auth, movieRouter);
 app.use("/api/theaters", auth, theaterRouter);
 app.use("/api/shows", auth, showRouter);
 app.use("/api/bookings", auth, bookingRouter);
-// app.get("*", (req, res) => {
-// 	res.sendFile(path.join(clientBuildPath, "index.html"));
-// });
 
 const port = process.env.PORT || 8080;
 app.listen(port, () => {
