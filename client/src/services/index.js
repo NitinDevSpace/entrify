@@ -28,3 +28,28 @@ axiosInstance.interceptors.request.use(
 		return Promise.reject(error);
 	}
 );
+
+let rateLimitAlertShown = false;
+
+axiosInstance.interceptors.response.use(
+	function (response) {
+		return response;
+	},
+	function (error) {
+		if (
+			error.response &&
+			error.response.status === 429 &&
+			error.response.data &&
+			error.response.data.message
+		) {
+			if (!rateLimitAlertShown) {
+				alert(error.response.data.message);
+				rateLimitAlertShown = true;
+				setTimeout(() => {
+					rateLimitAlertShown = false;
+				}, 10000); // Reset after 10sec
+			}
+		}
+		return Promise.reject(error);
+	}
+);
