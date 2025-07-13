@@ -23,7 +23,14 @@ function App() {
 				<BrowserRouter>
 					<AnimatePresence mode="wait">
 						<Routes>
-							<Route path="/" element={<Home />} />
+							<Route
+								path="/"
+								element={
+									<ProtectedRoute>
+										<Home />
+									</ProtectedRoute>
+								}
+							/>
 							<Route
 								path="/admin"
 								element={
