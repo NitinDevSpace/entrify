@@ -4,7 +4,6 @@ const app = express();
 const helmet = require("helmet");
 const mongoSanitize = require("express-mongo-sanitize");
 const path = require("path");
-const cors = require("cors");
 
 
 require("dotenv").config(); // LOADS ENV VARIABLES INTO PROCESS.ENV
@@ -42,12 +41,6 @@ const apiLimited = rateLimit({
 const clientBuildPath = path.join(__dirname, "../client/dist");
 app.use(express.static(clientBuildPath));
 
-app.use(
-	cors({
-		origin: process.env.FRONTEND_URL,
-		credentials: true,
-	})
-);
 app.use(helmet());
 app.use(express.json());
 // app.use(
@@ -69,7 +62,6 @@ app.use(
 	helmet.contentSecurityPolicy({
 		directives: {
 			defaultSrc: ["'self'"],
-			scriptSrc: ["'self'", "example.com"], // Allow scripts from 'self' and example.com
 			styleSrc: ["'self'", "'unsafe-inline'"], // Allow inline styles (unsafe)
 			imgSrc: ["'self'", "data:", "example.com"], // Allow images from 'self', data URLs, and example.com
 			connectSrc: ["'self'", "api.example.com"], // Allow connections to 'self' and api.example.com
@@ -96,8 +88,11 @@ app.use("/api/movies", auth, movieRouter);
 app.use("/api/theaters", auth, theaterRouter);
 app.use("/api/shows", auth, showRouter);
 app.use("/api/bookings", auth, bookingRouter);
+app.get("*", (req, res) => {
+	res.sendFile(path.join(clientBuildPath, "index.html"));
+});
 
 const port = process.env.PORT || 8080;
-app.listen(Port, () => {
+app.listen(port, () => {
 	console.log(`Listening on port ${port}`);
 });
