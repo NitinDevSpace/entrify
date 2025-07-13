@@ -35,3 +35,43 @@ export const GetCurrentUser = async (values) => {
 		console.log("Error while calling getCurrentUser API ", error);
 	}
 };
+
+export const ForgetPassword = async (values) => {
+	try {
+		const response = await axiosInstance.post(
+			"/api/users/forget-password",
+			values
+		);
+		return response.data;
+	} catch (error) {
+		console.log("Error while calling ForgotPassword API ", error);
+		if (error.response && error.response.data) {
+			return error.response.data;
+		} else {
+			return {
+				success: false,
+				message: error.message || "Something went wrong",
+			};
+		}
+	}
+};
+
+export const ResetPassword = async (values) => {
+	try {
+		const response = await axiosInstance.post(
+			"/api/users/reset-password",
+			values
+		);
+		return response.data;
+	} catch (error) {
+		console.log("Error while calling ResetPassword API ", error);
+		if (error.response && error.response.data) {
+			return error.response.data;
+		} else {
+			return {
+				success: false,
+				message: error.message || "Something went wrong",
+			};
+		}
+	}
+};

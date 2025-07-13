@@ -13,6 +13,8 @@ import Partner from "./pages/Partner";
 import Profile from "./pages/User";
 import SingleMovie from "./pages/Booking/SingleMovie";
 import BookShow from "./pages/Booking/BookShow";
+import Forget from "./pages/Forget";
+import Reset from "./pages/Reset";
 
 function App() {
 	return (
@@ -71,6 +73,8 @@ function App() {
 							/>
 							<Route path="/login" element={<Login />} />
 							<Route path="/register" element={<Register />} />
+							<Route path="/forget" element={<Forget />} />
+							<Route path="/reset" element={<Reset />} />
 							<Route path="/*" element={<PageNotFound />} />
 						</Routes>
 					</AnimatePresence>

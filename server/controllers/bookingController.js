@@ -1,7 +1,7 @@
 const stripe = require("stripe")(process.env.STRIPE_KEY);
 const Booking = require("../models/bookingModel");
 const Show = require("../models/showModel");
-//const EmailHelper = require("../utils/EmailHelper");
+const EmailHelper = require("../utils/EmailHelper");
 
 const makePayment = async (req, res) => {
 	try {

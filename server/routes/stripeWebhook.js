@@ -3,6 +3,7 @@ const router = express.Router();
 const stripe = require("stripe")(process.env.STRIPE_KEY);
 const Booking = require("../models/bookingModel");
 const Show = require("../models/showModel");
+const EmailHelper = require("../utils/EmailHelper");
 
 router.post(
 	"/webhook",
@@ -13,8 +14,8 @@ router.post(
 
 		try {
 			event = stripe.webhooks.constructEvent(
-                req.body,
-                sig,
+				req.body,
+				sig,
 				process.env.STRIPE_WEBHOOK_SECRET
 			);
 		} catch (err) {
@@ -45,6 +46,39 @@ router.post(
 			await Show.findByIdAndUpdate(showId, { bookedSeats: updatedSeats });
 
 			console.log("✅ Booking created via webhook.");
+
+			//Sending Ticket om mail
+			const populateBookingInfo = await Booking.findById(newBooking._id)
+				.populate("user")
+				.populate("show")
+				.populate({
+					path: "show",
+					populate: {
+						path: "movie",
+						model: "movies",
+					},
+				})
+				.populate({
+					path: "show",
+					populate: {
+						path: "theatre",
+						model: "theaters",
+					},
+				});
+
+			await EmailHelper("ticketTemplate.html", populateBookingInfo.user.email, {
+				name: populateBookingInfo.user.name,
+				movie: populateBookingInfo.show.movie.title,
+				theatre: populateBookingInfo.show.theatre.name,
+				date: populateBookingInfo.show.date,
+				time: populateBookingInfo.show.time,
+				seats: populateBookingInfo.seats,
+				amount:
+					populateBookingInfo.seats.length *
+					populateBookingInfo.show.ticketPrice,
+				transactionId: populateBookingInfo.transactionId,
+			});
+			
 		}
 
 		res.json({ received: true });

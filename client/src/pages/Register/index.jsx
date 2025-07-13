@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import bgImage from "../../assets/login_bg.jpeg";
 import tlogo from "../../assets/logo-white.png";
 import { useNavigate } from "react-router-dom";
@@ -10,6 +10,17 @@ function Register() {
 	const navigate = useNavigate();
 	const [messageApi, contextHolder] = message.useMessage();
 	const [form] = Form.useForm();
+
+	useEffect(() => {
+		//getting token from the cookies
+		const hasToken = document.cookie
+			.split("; ")
+			.some((c) => c.startsWith("token="));
+		if (hasToken) {
+			message.error('Please logout to register!')
+			navigate("/");
+		}
+	}, []);
 
 	const onFinish = async (values) => {
 		try {

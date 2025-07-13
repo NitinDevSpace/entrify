@@ -15,26 +15,27 @@ function Login() {
 		try {
 			const response = await LoginUser(values);
 			if (response.success) {
-				document.cookie = `token=${response.token}; path=/; max-age=${7 * 24 * 60 * 60}`;
+				document.cookie = `token=${response.token}; path=/; max-age=${
+					7 * 24 * 60 * 60
+				}`;
 				messageApi.open({
 					type: "success",
 					content: response.message,
 				});
-				navigate('/');
+				navigate("/");
 			} else {
 				messageApi.open({
 					type: "error",
 					content: response.message,
 				});
 			}
-			
 		} catch (error) {
 			messageApi.open({
 				type: "error",
 				content: error.message,
-			})
+			});
 		}
-	}
+	};
 
 	return (
 		<motion.div
@@ -85,7 +86,12 @@ function Login() {
 								/>
 							</Form.Item>
 							<Form.Item>
-								<button className="hover:text-blue-500 text-sm">
+								<button
+									className="hover:text-blue-500 text-sm"
+									onClick={() => {
+										navigate("/forget");
+									}}
+								>
 									Forgot your password?
 								</button>
 							</Form.Item>

@@ -1,5 +1,6 @@
 const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
+const EmailHelper = require('../utils/EmailHelper')
 
 const register = async (req, res) => {
 	try {
@@ -24,7 +25,7 @@ const register = async (req, res) => {
 const login = async (req, res) => {
 	try {
 		const user = await User.findOne({ email: req.body.email });
-		
+
 		if (!user) {
 			return res.send({
 				success: false,
@@ -52,7 +53,7 @@ const login = async (req, res) => {
 
 const getCurrentUser = async (req, res) => {
 	try {
-		const user = await User.findById(req.userId).select("-password");//selects everything minus the passowrd
+		const user = await User.findById(req.userId).select("-password"); //selects everything minus the passowrd
 		res.send({
 			success: true,
 			message: "User is Authenticated",
@@ -63,4 +64,92 @@ const getCurrentUser = async (req, res) => {
 	}
 };
 
-module.exports = { register, login, getCurrentUser };
+const forgetPassword = async (req, res) => {
+	try {
+		const { email } = req.body;
+		if (email == undefined) {
+			return res.status(401).send({
+				success: false,
+				message: "Enter email",
+			});
+		}
+
+		let user = await User.findOne({ email: email });
+		if (user == null) {
+			return res.status(404).send({
+				success: false,
+				message: "User not found",
+			});
+		}
+		if (user?.otp && Date.now() < user?.otpExpiry) {
+			return res.status(401).send({
+				success: false,
+				message: "OTP exists check your inbox",
+			});
+		}
+		const otp = Math.floor(Math.random() * 10000 + 9000);
+		user.otp = otp;
+		user.otpExpiry = Date.now() + 10 * 60 * 1000;
+		await user.save();
+		await EmailHelper("otp.html", email, {
+			name: user.name,
+			otp: user.otp,
+		});
+
+		res.status(200).send({
+			success: true,
+			message: "OTP sent to your Email",
+		});
+	} catch (error) {
+		res.status(500).send({
+			success: false,
+			message: error.message,
+		});
+	}
+};
+
+const resetPassword = async (req, res) => {
+	try {
+		const { password, otp } = req.body;
+		if (password == undefined || otp == undefined) {
+			return res.status(401).send({
+				success: false,
+				message: "invalid request",
+			});
+		}
+		const user = await User.findOne({ otp: otp });
+		if (user == null) {
+			return res.status(404).send({
+				success: false,
+				message: "user not found",
+			});
+		}
+		if (Date.now() > user.otpExpiry) {
+			return res.status(401).json({
+				success: false,
+				message: "otp expired",
+			});
+		}
+		user.password = password;
+		user.otp = undefined;
+		user.otpExpiry = undefined;
+		await user.save();
+		res.status(200).json({
+			success: true,
+			message: "password reset successfully",
+		});
+	} catch (error) {
+		res.status(500).send({
+			success: false,
+			message: error.message,
+		});
+	}
+};
+
+module.exports = {
+	register,
+	login,
+	getCurrentUser,
+	forgetPassword,
+	resetPassword,
+};
