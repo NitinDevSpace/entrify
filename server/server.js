@@ -94,7 +94,7 @@ app.use("/api/bookings", auth, bookingRouter);
 // });
 const fs = require("fs");
 
-app.get("*", (req, res) => {
+app.get(/(.*)/, (req, res) => {
 	const indexPath = path.join(clientBuildPath, "index.html");
 	if (fs.existsSync(indexPath)) {
 		res.sendFile(indexPath);
