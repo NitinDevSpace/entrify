@@ -18,7 +18,7 @@ export const LoginUser = async (values) => {
 		const response = await axiosInstance.post("/api/users/login", values);
 		return response.data;
 	} catch (error) {
-		console.log('"Error while calling Login API ",', error);
+		console.log("Error while calling Login API", error);
 	}
 };
 

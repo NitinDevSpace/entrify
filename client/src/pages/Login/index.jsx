@@ -60,7 +60,7 @@ function Login() {
 					{/* Left Panel */}
 					<div className="md:w-2/3 flex flex-col justify-center text-center pt-16 p-5 md:p-9">
 						<h1 className="text-2xl font-bold text-center mb-4 text-[#7B61FF]">
-							Login to Entrify
+							Login first to access Entrify
 						</h1>
 						<Form layout="vertical" onFinish={onFinish}>
 							<Form.Item

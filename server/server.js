@@ -1,6 +1,7 @@
 const express = require("express");
 const rateLimit = require("express-rate-limit");
 const app = express();
+app.set("trust proxy", 1);
 const helmet = require("helmet");
 const mongoSanitize = require("express-mongo-sanitize");
 const path = require("path");
@@ -88,6 +89,19 @@ app.use("/api/movies", auth, movieRouter);
 app.use("/api/theaters", auth, theaterRouter);
 app.use("/api/shows", auth, showRouter);
 app.use("/api/bookings", auth, bookingRouter);
+// app.get("*", (req, res) => {
+// 	res.sendFile(path.join(clientBuildPath, "index.html"));
+// });
+const fs = require("fs");
+
+app.get("*", (req, res) => {
+	const indexPath = path.join(clientBuildPath, "index.html");
+	if (fs.existsSync(indexPath)) {
+		res.sendFile(indexPath);
+	} else {
+		res.status(404).send("Frontend build not found.");
+	}
+});
 
 const port = process.env.PORT || 8080;
 app.listen(port, () => {
