@@ -59,19 +59,19 @@ app.use(express.json());
 // );
 
 // Custom Content Security Policy (CSP) configuration
-app.use(
-	helmet.contentSecurityPolicy({
-		directives: {
-			defaultSrc: ["'self'"],
-			styleSrc: ["'self'", "'unsafe-inline'"], // Allow inline styles (unsafe)
-			imgSrc: ["'self'", "data:"], // Allow images from 'self', data URLs, and example.com
-			connectSrc: ["'self'"], // Allow connections to 'self' and api.example.com
-			fontSrc: ["'self'", "fonts.gstatic.com"], // Allow fonts from 'self' and fonts.gstatic.com
-			objectSrc: ["'none'"], // Disallow object, embed, and applet elements
-			upgradeInsecureRequests: null, // Upgrade insecure requests to HTTPS
-		},
-	})
-);
+// app.use(
+// 	helmet.contentSecurityPolicy({
+// 		directives: {
+// 			defaultSrc: ["'self'"],
+// 			styleSrc: ["'self'", "'unsafe-inline'"], // Allow inline styles (unsafe)
+// 			imgSrc: ["'self'", "data:"], // Allow images from 'self', data URLs, and example.com
+// 			connectSrc: ["'self'"], // Allow connections to 'self' and api.example.com
+// 			fontSrc: ["'self'", "fonts.gstatic.com"], // Allow fonts from 'self' and fonts.gstatic.com
+// 			objectSrc: ["'none'"], // Disallow object, embed, and applet elements
+// 			upgradeInsecureRequests: null, // Upgrade insecure requests to HTTPS
+// 		},
+// 	})
+// );
 
 
 //Importing routes
