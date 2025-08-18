@@ -38,15 +38,14 @@ const login = async (req, res) => {
 				message: "User not found, Please Register",
 			});
 		}
-		const saltRounds = 10;
-		const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
-		const isMatch = await bcrypt.compare(req.body.password, hashedPassword);
-		if (!isMatch) {
-			return res.send({
-				success: false,
-				message: "Invalid Password",
-			});
-		}
+		 const isMatch = await bcrypt.compare(req.body.password, user.password);
+		    if (!isMatch) {
+		      return res.send({
+		        success: false,
+		        message: "Invalid Password",
+		      });
+		    }
+		
 		const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
 			expiresIn: "7d",
 		});
