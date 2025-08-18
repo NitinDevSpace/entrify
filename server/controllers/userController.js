@@ -138,7 +138,8 @@ const resetPassword = async (req, res) => {
 				message: "otp expired",
 			});
 		}
-		user.password = password;
+		const saltRounds = 10;
+		user.password = await bcrypt.hash(password, saltRounds);
 		user.otp = undefined;
 		user.otpExpiry = undefined;
 		await user.save();
