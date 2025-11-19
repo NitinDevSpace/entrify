@@ -34,7 +34,7 @@ const deleteMovie = async (req, res) => {
 
 const getAllMovies = async (req, res) => {
 	try {
-		const allMovies = await Movie.find().limited(req.body.limit || 35);
+		const allMovies = await Movie.find().limit(35);
 		res.send({
 			success: true,
 			message: "All movies fetched",
