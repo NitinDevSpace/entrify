@@ -90,7 +90,7 @@ const forgetPassword = async (req, res) => {
 			});
 		}
 		if (user?.otp && Date.now() < user?.otpExpiry) {
-			return res.status(401).send({
+			return res.status(409).send({
 				success: false,
 				message: "OTP exists check your inbox",
 			});
@@ -98,11 +98,11 @@ const forgetPassword = async (req, res) => {
 		const otp = Math.floor(Math.random() * 10000 + 9000);
 		user.otp = otp;
 		user.otpExpiry = Date.now() + 10 * 60 * 1000;
-		await user.save();
 		await EmailHelper("otp.html", email, {
 			name: user.name,
 			otp: user.otp,
 		});
+		await user.save();
 
 		res.status(200).send({
 			success: true,
