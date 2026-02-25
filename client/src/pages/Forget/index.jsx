@@ -1,10 +1,11 @@
-import React, { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button, Form, Input, message } from "antd";
 import { ForgetPassword } from "../../services/users";
 
 const Forget = () => {
 	const navigate = useNavigate();
+	const [loading, setLoading] = useState(false);
 
 	useEffect(() => {
 		//getting token from the cookies
@@ -19,6 +20,7 @@ const Forget = () => {
 
 	const onFinish = async (values) => {
 		try {
+			setLoading(true);
 			const response = await ForgetPassword(values);
 			if (response.success) {
 				message.success(response.message);
@@ -37,6 +39,8 @@ const Forget = () => {
 			} else {
 				message.error(error.message);
 			}
+		} finally {
+			setLoading(false);
 		}
 	};
 	return (
@@ -66,10 +70,11 @@ const Forget = () => {
 								<Button
 									type="primary"
 									block
+									loading={loading}
 									htmlType="submit"
 									style={{ fontSize: "1rem", fontWeight: "600" }}
-								>
-									SEND OTP
+									>
+										{loading ? "Sending..." : "SEND OTP"}
 								</Button>
 							</Form.Item>
 						</Form>
